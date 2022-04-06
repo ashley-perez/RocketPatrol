@@ -2,17 +2,14 @@
 class Rocket extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, texture, frame) {
-
         super(scene, x, y, texture, frame);
 
         scene.add.existing(this); // add to existing, displayList, updateList
         this.isFiring = false;    // track rocket's firing status
         this.moveSpeed = 2;       // pixels per frame
-
     }
 
     update() {
-
         // left/right movement
         // check if the rocket is firing and if it is NOT  then...
         // the player is able to move left and right
@@ -43,4 +40,9 @@ class Rocket extends Phaser.GameObjects.Sprite {
         }
     }
 
+    // reset rocket to the "ground"
+    reset() {
+        this.isFiring = false;
+        this.y = game.config.height - borderUISize - borderPadding;
+    }
 }
