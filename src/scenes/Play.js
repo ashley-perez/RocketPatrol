@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         // loads images/tiles sprites
         // load.image() has 2 parameters: string that will be used to reference this image
         //                                URL for where the image is located
+        // used Nathan Altice's previously made assets, thanks Nathan :)
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
@@ -33,12 +34,23 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
+        // add rocket (p1)
+        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
+
+        // define keys
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
     }
 
     update() {
 
         // texture of our tile sprite will move 4 horizontal pixels left every frame
         this.starfield.tilePositionX -= 4;
+
+        this.p1Rocket.update(); // tells Phaser to also update our rocket object when it does its update stuff
     }
 
 }
