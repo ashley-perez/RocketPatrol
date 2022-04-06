@@ -62,9 +62,50 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
+        // initialize score
+        this.p1Score = 0;
+
+        // display score 
+        // the config of how we want the score to look like
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        // actually adds the score and makes it visible
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+
+        // GAME OVER flag
+        this.gameOver = false; // binding the game over property to the scene and setting it to false
+
+        // adding the 60 second play clock 
+        // delayedCall has 4 parameters passed to it here: time (milliseconds), callback function (here it is an => function / anonymous)
+        //                                                 arguments we might want to pass to the callback function which is null in this case,
+        //                                                 callback context which is this (the current Play scene)
+        scoreConfig.fixedWidth = 0;
+        this.clock = this.time.delayedCall(60000, () => {
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart', scoreConfig).setOrigin(0.5);
+
+            this.gameOver = true; // timer runs out so set the game over status to true
+        }, null, this);
+
     }
 
     update() {
+
+        // check key input for restart 
+        // makeing sure the game is over and checking if R has been pressed
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+            this.scene.restart();
+        }
 
         // texture of our tile sprite will move 4 horizontal pixels left every frame
         this.starfield.tilePositionX -= 4;
@@ -72,9 +113,12 @@ class Play extends Phaser.Scene {
         this.p1Rocket.update(); // tells Phaser to also update our rocket object when it does its update stuff
 
         // update the spaceships to actually move
-        this.ship01.update();
-        this.ship02.update();
-        this.ship03.update();
+        if(!this.gameOver) {
+            this.p1Rocket.update(); // update the rocket sprite
+            this.ship01.update();   // update the spaceships
+            this.ship02.update();
+            this.ship03.update();
+        }
 
         // check for collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
@@ -113,6 +157,9 @@ class Play extends Phaser.Scene {
             ship.alpha = 1;                    // make ship visible again
             boom.destroy();                    // remove explosion sprite
         });
+        // adding the score and repaint
+        this.p1Score += ship.points;        // updates the player score
+        this.scoreLeft.text = this.p1Score; // actually updates the score's text box with the new score value
     }
 
 }
