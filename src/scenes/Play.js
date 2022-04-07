@@ -90,11 +90,17 @@ class Play extends Phaser.Scene {
         //                                                 arguments we might want to pass to the callback function which is null in this case,
         //                                                 callback context which is this (the current Play scene)
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(60000, () => {
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
 
             this.gameOver = true; // timer runs out so set the game over status to true
+
+            // if game is over and you press the left key then go to the menu
+            if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+                this.scene.start("menuScene");
+            }
+
         }, null, this);
 
     }
