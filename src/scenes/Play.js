@@ -95,12 +95,6 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
 
             this.gameOver = true; // timer runs out so set the game over status to true
-
-            // if game is over and you press the left key then go to the menu
-            if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-                this.scene.start("menuScene");
-            }
-
         }, null, this);
 
     }
@@ -111,6 +105,10 @@ class Play extends Phaser.Scene {
         // makeing sure the game is over and checking if R has been pressed
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
+        }
+
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.scene.start("menuScene");
         }
 
         // texture of our tile sprite will move 4 horizontal pixels left every frame
